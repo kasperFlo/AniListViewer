@@ -1,3 +1,5 @@
+type="text/babel"
+
 document.addEventListener("DOMContentLoaded",event => {
     console.dir(("DOM loaded Console Test"))
 
@@ -48,16 +50,26 @@ document.addEventListener("DOMContentLoaded",event => {
         let pData = RawJson.data.Page.media;
         let ToDisplay = "";
 
-        pData.forEach(function(media){
+        for (const media of pData){
+            const NewNode = document.createElement("div");
+            NewNode.classList.add("bg-red-500");
+
             ToDisplay += ("Media ID: " + media.id + "\n");
             ToDisplay += ("Title (Romaji): " + media.title.romaji + "\n");
 
-
-            // textBox.render(<h1>Hello, world</h1>);
-        })
+        }
 
         textBox.innerText = ToDisplay;
         console.dir(pData);
+    }
+    function card(media,title){
+        const element = (
+        <div>
+            <div>media </div>
+            <div> </div>
+        </div>)
+
+        textBox.render(element);
     }
 
     /*Handles API json and What to do with it */
