@@ -1,5 +1,14 @@
 document.addEventListener("DOMContentLoaded",event => {
-    console.dir(("8==> test"))
+    console.dir(("DOM loaded Console Test"))
+
+
+    let url = 'https://graphql.anilist.co';
+    let xhr = new XMLHttpRequest();
+    let APIData = null;
+    let error = null;
+
+    let textBox = document.getElementById("textBOX");
+
     let query = `
         query ($id: Int, $page: Int, $perPage: Int, $search: String) {
           Page (page: $page, perPage: $perPage) {
@@ -15,43 +24,48 @@ document.addEventListener("DOMContentLoaded",event => {
           title {
             romaji
           }
-        }
-      }
-    }
-`;
-    let variables = {
+        } } } `;
+    let RequestVariables = {
         search: "Fate/Zero",
         page: 2,
         perPage: 6
     };
-    let payload = JSON.stringify({
+
+    let requestBody = JSON.stringify({
         query: query,
-        variables: variables
+        variables: RequestVariables
     });
-
-    let url = 'https://graphql.anilist.co';
-    let xhr = new XMLHttpRequest();
-
-    let data = null;
-    let error = null;
-
-    let textBox = document.getElementById("textBOX");
+    console.dir(requestBody)
 
     xhr.open("POST",url,true);
-
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Accept', 'application/json');
 
-    xhr.send(payload);
+    xhr.send(requestBody);
 
+    /*takes API json and Displays it onto page */
+    function pageParse(RawJson){
+        let pData = RawJson.data.Page.media;
+        let ToDisplay = "";
+
+        pData.forEach(function(media){
+            ToDisplay += ("Media ID: " + media.id + "\n");
+            ToDisplay += ("Title (Romaji): " + media.title.romaji + "\n");
+        })
+
+        textBox.innerText = ToDisplay;
+        console.dir(pData);
+    }
+
+    /*Handles API json and What to do with it */
     xhr.onreadystatechange = function (){
         if(this.readyState === XMLHttpRequest.DONE){
             if (this.status == "200") { // if response from server is good
-                data = JSON.parse(this.responseText);
-                console.dir(data);
+                APIData = JSON.parse(this.responseText);
+                console.dir(APIData);
 
-                textBox.innerText = JSON.stringify(data)
-                pageParse(data)
+                textBox.innerText = JSON.stringify(APIData)
+                pageParse(APIData)
             } else {
                 error = this.statusText;
                 console.dir(error)
@@ -59,19 +73,6 @@ document.addEventListener("DOMContentLoaded",event => {
         }
     }
 
-    function pageParse(data){
-        let pData = data.data.Page.media;
-        let thing = "";
-
-        pData.forEach(function(media){
-            thing+=("Media ID: " + media.id + "\n");
-            thing+=("Title (Romaji): " + media.title.romaji + "\n");
-        })
-
-        textBox.innerText = thing;
-
-        console.dir(pData);
-    }
 
 
 });
