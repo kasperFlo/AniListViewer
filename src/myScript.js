@@ -51,6 +51,9 @@ document.addEventListener("DOMContentLoaded",event => {
         pData.forEach(function(media){
             ToDisplay += ("Media ID: " + media.id + "\n");
             ToDisplay += ("Title (Romaji): " + media.title.romaji + "\n");
+
+
+            // textBox.render(<h1>Hello, world</h1>);
         })
 
         textBox.innerText = ToDisplay;
