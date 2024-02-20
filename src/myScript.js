@@ -26,9 +26,9 @@ document.addEventListener("DOMContentLoaded", event => {
           }
         } } } `;
     let RequestVariables = {
-        search: "Fate/Zero",
+        search: "Attack",
         page: 4,
-        perPage: 6
+        perPage: 16
     };
 
     let requestBody = JSON.stringify({
@@ -44,65 +44,40 @@ document.addEventListener("DOMContentLoaded", event => {
     xhr.send(requestBody);
 
     /*takes API json and Displays it onto page */
-    // function pageParse(RawJson) {
-    //     let pData = RawJson.data.Page.media;
-    //     textBox.innerText = ""; // Clear existing content
-    //
-    //     const cardElements = pData.map((media) => {
-    //         return (
-    //             <div className='card m-2 w-2/5 flex flex-row justify-center grid grid-cols-6'>
-    //                 <div className='p-3 col-span-2'>Media ID: {media.id}</div>
-    //                 <div className='p-3 col-span-3'>Title (Romaji): {media.title.romaji}</div>
-    //             </div>
-    //         );
-    //     });
-    //
-    //     textBox.append(...cardElements); // Append all cards at once
-    // }
     function pageParse(RawJson) {
         let pData = RawJson.data.Page.media;
-        let ToDisplay = "";
-        textBox.innerText = "";
+        textBox.innerText = ""; // Clear existing content
 
-        for (const media of pData) {
-            const card = document.createElement('div');
-            card.className = 'card m-2 w-2/5 flex flex-row justify-center grid grid-cols-6';
-
-            const mediaIdDiv = document.createElement('div');
-            mediaIdDiv.className = 'p-3 col-span-2';
-            mediaIdDiv.textContent = `Media ID: ${media.id}`;
-
-            const titleDiv = document.createElement('div');
-            titleDiv.className = ('p-3 col-span-3');
-            titleDiv.textContent = `Title (Romaji): ${media.title.romaji}`;
-
-            card.appendChild(mediaIdDiv);
-            card.appendChild(titleDiv);
-
-            textBox.appendChild(card);
-        }
+        // Return an array of JSX elements. We now build those directly
+        return pData.map((media) => {
+            return (
+                <div className="card m-2 w-2/5 flex flex-row p-3">
+                    <div className="m-2 w-2/12 justify-end " style={{ width: '140px' }} >Media ID: {media.id}</div>
+                    <div className="m-2 w-10/12 justify-end">Title (Romaji): {media.title.romaji}</div>
+                </div>
+            );
+        });
     }
-
 
     /*Handles API json and What to do with it */
     xhr.onreadystatechange = function () {
         if (this.readyState === XMLHttpRequest.DONE) {
             if (this.status == "200") { // if response from server is good
                 APIData = JSON.parse(this.responseText);
-
-                console.dir("Request Headers:\n"+  xhr.getAllResponseHeaders())
-                console.dir("Request Body :\n" +  JSON.stringify(requestBody) )
-
-                console.dir("this is recevied data below");
                 console.dir(APIData);
 
-                pageParse(APIData)
+                const rootTextBOX = ReactDOM.createRoot(document.getElementById('textBOX'));
+                const cardElements = pageParse(APIData)
+                rootTextBOX.render(cardElements);
+
+                // console.dir("Request Headers:\n"+  xhr.getAllResponseHeaders())
+                // console.dir("Request Body :\n" +  JSON.stringify(requestBody) )
+
             } else {
-                error = this.statusText;
+                textBox.innerText = this.statusText;
                 console.dir(error)
             }
         }
     }
-
 
 }); // DOM Content
