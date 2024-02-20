@@ -35,7 +35,6 @@ document.addEventListener("DOMContentLoaded", event => {
         query: query,
         variables: RequestVariables
     });
-    console.dir("printing request body\n -->" + requestBody)
 
 
     xhr.open("POST", url, true);
@@ -90,7 +89,10 @@ document.addEventListener("DOMContentLoaded", event => {
         if (this.readyState === XMLHttpRequest.DONE) {
             if (this.status == "200") { // if response from server is good
                 APIData = JSON.parse(this.responseText);
-                
+
+                console.dir("Request Headers:\n"+  xhr.getAllResponseHeaders())
+                console.dir("Request Body :\n" +  JSON.stringify(requestBody) )
+
                 console.dir("this is recevied data below");
                 console.dir(APIData);
 
