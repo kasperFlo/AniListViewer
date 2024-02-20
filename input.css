@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.card {
+    background-color: slategrey;  /* Light gray background */
+    border-radius: 8px;          /* Rounded corners */
+    padding: 15px;               /* Internal spacing */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9); /* Subtle shadow */
+}
